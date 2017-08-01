@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.11;
 
 import './interfaces/IProposal.sol';
 import './interfaces/ISmartToken.sol';
@@ -13,6 +13,7 @@ contract Proposal is Owned, IProposal, SafeMath{
     uint256 public startTime;
     uint256 public endTime;
     uint256 public redeemTime;
+
     uint256 public depositBalance;
 
     DAO public dao;
@@ -26,6 +27,10 @@ contract Proposal is Owned, IProposal, SafeMath{
     uint256 _startTime,
     uint256 _endTime,
     uint256 _redeemTime){
+        require(now < _startTime);
+        require(_startTime < _endTime);
+        require(_endTime < _redeemTime);
+
         dao = _dao;
         depositToken = dao.depositToken();
         voteTokenController = _voteTokenController;
@@ -60,15 +65,12 @@ contract Proposal is Owned, IProposal, SafeMath{
         depositBalance = safeAdd(depositBalance, _voteAmount);
     }
 
-    function execute() public excuteStage {
-    // do some real change to dao
-    }
-
     function redeem() public redeemStage {
         uint256 amount = voteToken.balanceOf(msg.sender);
         require(amount > 0);
         voteTokenController.destroyTokens(msg.sender, amount);
         depositToken.transfer(msg.sender, amount);
+        depositBalance = safeSub(depositBalance, amount);
     }
 
 
