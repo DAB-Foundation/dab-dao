@@ -31,6 +31,24 @@ contract DAB is Owned{
         isActive = true;
     }
 
+    function setDABFormula(address _formula)
+    public
+    ownerOnly{
+    // TODO set DAB formula
+    }
+
+    function addLoanPlanFormula(address _formula)
+    public
+    ownerOnly{
+    // TODO add loan plan formula
+    }
+
+    function disableLoanPlanFormula(address _formula)
+    public
+    ownerOnly{
+    // TODO disable loan plan formula
+    }
+
     function transferDepositTokensFrom(address _from, address _to, uint256 _amount)
     public
     ownerOnly{

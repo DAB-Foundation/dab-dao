@@ -9,6 +9,7 @@ import './SmartTokenController.sol';
 
 contract Proposal is Owned, IProposal, SafeMath{
 
+
     uint256 public startTime;
     uint256 public endTime;
     uint256 public redeemTime;
@@ -19,7 +20,7 @@ contract Proposal is Owned, IProposal, SafeMath{
     ISmartToken public voteToken;
     SmartTokenController public voteTokenController;
 
-    function AcceptDABOwnershipProposal(
+    function Proposal(
     DAO _dao,
     SmartTokenController _voteTokenController,
     uint256 _startTime,
@@ -28,7 +29,6 @@ contract Proposal is Owned, IProposal, SafeMath{
         dao = _dao;
         depositToken = dao.depositToken();
         voteTokenController = _voteTokenController;
-
         startTime = _startTime;
         endTime = _endTime;
         redeemTime = _redeemTime;
@@ -61,7 +61,7 @@ contract Proposal is Owned, IProposal, SafeMath{
     }
 
     function execute() public excuteStage {
-        // do some real change to dao
+    // do some real change to dao
     }
 
     function redeem() public redeemStage {

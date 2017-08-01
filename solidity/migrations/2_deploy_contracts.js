@@ -3,9 +3,9 @@ var DepositToken = artifacts.require("DepositToken.sol");
 var VoteToken = artifacts.require("VoteToken.sol");
 
 var DepositTokenController = artifacts.require("DepositTokenController.sol");
-var VoteTokenController = artifacts.require("VoteVoteTokenControllerToken.sol");
+var VoteTokenController = artifacts.require("VoteTokenController.sol");
 
-var DepositAgent = artifacts.require("DepositAgent.sol");
+var DepositAgent = artifacts.require("DABDepositAgent.sol");
 var DAB = artifacts.require("DAB.sol");
 var DAOFormula = artifacts.require("DAOFormula.sol");
 var DAO = artifacts.require("DAO.sol");
@@ -19,8 +19,8 @@ let redeemTime = Math.floor(Date.now() / 1000) + 17 * 24 * 60 * 60; // crowdsale
 module.exports = async(deployer) => {
     await deployer.deploy(DAOFormula);
 
-    await deployer.deploy(DepositToken);
-    await deployer.deploy(VoteToken);
+    await deployer.deploy(DepositToken, "Deposit Token", "DPT", 18);
+    await deployer.deploy(VoteToken, "Vote Token", "VOT", 18);
 
     await deployer.deploy(DepositTokenController, DepositToken.address);
     await deployer.deploy(VoteTokenController, VoteToken.address);

@@ -1,0 +1,55 @@
+{
+  "contract_name": "IProposal",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "proposalContract",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_voter",
+          "type": "address"
+        },
+        {
+          "name": "_voteAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "vote",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "execute",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "redeem",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    }
+  ],
+  "unlinked_binary": "0x6060604052341561000c57fe5b5b60e98061001b6000396000f300606060405263ffffffff60e060020a6000350416633aef39008114603e5780635f74bbde14606757806361461954146085578063be040fb0146085575bfe5b3415604557fe5b604b60a3565b60408051600160a060020a039092168252519081900360200190f35b3415606e57fe5b6083600160a060020a036004351660243560b2565b005b3415608c57fe5b608360b7565b005b3415608c57fe5b608360b7565b005b600054600160a060020a031681565b5b5050565b5b565b5b5600a165627a7a72305820f7bd2268898320e35c9bea36a2420af57efdd0632d47bd53bf379d5dbe8eab630029",
+  "networks": {},
+  "schema_version": "0.0.5",
+  "updated_at": 1501590586540
+}
