@@ -80,16 +80,4 @@ contract DABDepositAgent is Owned, SafeMath{
         depositTokenController.acceptOwnership();
     }
 
-    function transferDepositTokensFrom(address _from, address _to, uint256 _amount)
-    public
-    ownerOnly
-    validAddress(_from)
-    validAddress(_to)
-    validAmount(_amount) {
-        depositToken.transferFrom(_from, _to, _amount);
-        if(_to == address(this)){
-            depositBalance = safeAdd(depositBalance, _amount);
-        }
-    }
-
 }

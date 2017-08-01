@@ -2,19 +2,18 @@ pragma solidity ^0.4.11;
 
 import './interfaces/IProposal.sol';
 import './interfaces/ISmartToken.sol';
-import './Owned.sol';
 import './SafeMath.sol';
 import './DAO.sol';
 import './SmartTokenController.sol';
 
-contract Proposal is Owned, IProposal, SafeMath{
+contract Proposal is IProposal, SafeMath{
 
 
     uint256 public startTime;
     uint256 public endTime;
     uint256 public redeemTime;
 
-    uint256 public depositBalance;
+    uint256 public proposalPrice;
 
     DAO public dao;
     ISmartToken public depositToken;
@@ -32,14 +31,14 @@ contract Proposal is Owned, IProposal, SafeMath{
         require(_endTime < _redeemTime);
 
         dao = _dao;
-        depositToken = dao.depositToken();
         voteTokenController = _voteTokenController;
         startTime = _startTime;
         endTime = _endTime;
         redeemTime = _redeemTime;
 
-        depositBalance = 0;
+        depositToken = dao.depositToken();
         voteToken = _voteTokenController.token();
+        proposalPrice = dao.proposalPrice();
     }
 
     modifier voteStage(){
@@ -57,12 +56,18 @@ contract Proposal is Owned, IProposal, SafeMath{
         _;
     }
 
+    function propose() public ownerOnly{
+        depositToken.approve(dao, proposalPrice);
+        transferOwnership(dao);
+        dao.propose(this);
+    }
+
     function vote(address _voter, uint256 _voteAmount)
     public
+    ownerOnly
     voteStage
     {
         voteTokenController.issueTokens(_voter, _voteAmount);
-        depositBalance = safeAdd(depositBalance, _voteAmount);
     }
 
     function redeem() public redeemStage {
@@ -70,7 +75,6 @@ contract Proposal is Owned, IProposal, SafeMath{
         require(amount > 0);
         voteTokenController.destroyTokens(msg.sender, amount);
         depositToken.transfer(msg.sender, amount);
-        depositBalance = safeSub(depositBalance, amount);
     }
 
 

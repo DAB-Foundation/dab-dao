@@ -77,9 +77,11 @@ contract DAO is Owned, DAOFormula{
         isActive = true;
     }
 
-    function propose(address _proposal)
+    function propose(IProposal _proposal)
     validAddress(_proposal) {
-        dab.transferDepositTokensFrom(_proposal, depositAgent, proposalPrice);
+        require(msg.sender == address(_proposal));
+        _proposal.acceptOwnership();
+        depositToken.transferFrom(_proposal, depositAgent, proposalPrice);
         proposals.push(_proposal);
         proposalStatus[_proposal].isValid = true;
     }
@@ -127,7 +129,7 @@ contract DAO is Owned, DAOFormula{
     validAddress(_proposal)
     validAmount(_voteAmount)
     validProposal(_proposal){
-        dab.transferDepositTokensFrom(msg.sender, _proposal, _voteAmount);
+        depositToken.transferFrom(msg.sender, _proposal, _voteAmount);
         _proposal.vote(msg.sender, _voteAmount);
         votes[msg.sender][_proposal] = safeAdd(votes[msg.sender][_proposal], _voteAmount);
     }
