@@ -1,0 +1,140 @@
+pragma solidity ^0.4.0;
+
+import './interfaces/IProposal.sol';
+import './interfaces/ISmartToken.sol';
+import './DAB.sol';
+import './DAOFormula.sol';
+import './DABDepositAgent.sol';
+import './Owned.sol';
+import './Math.sol';
+
+contract DAO is Owned, DAOFormula{
+
+    struct Proposal{
+        bool isValid;
+    }
+
+    bool public isActive;
+
+    uint256 public proposalPrice = 1000 ether;
+    address[] public proposals;
+    mapping (address => Proposal) public proposalStatus;
+    mapping (address => mapping (address => uint256)) public votes;
+
+    ISmartToken public depositToken;
+    DABDepositAgent public depositAgent;
+    DAB public dab;
+    DAOFormula public formula;
+
+    function DAO(
+    DAB _dab,
+    DAOFormula _formula){
+        dab = _dab;
+        formula = _formula;
+
+        depositAgent = dab.depositAgent();
+        depositToken = dab.depositToken();
+    }
+
+    modifier validAddress(address _address){
+        require(_address != 0x0);
+        _;
+    }
+
+    modifier validAmount(uint256 _amount){
+        require(_amount > 0);
+        _;
+    }
+
+    modifier active(){
+        require(isActive == true);
+        _;
+    }
+
+    modifier inactive(){
+        require(isActive == false);
+        _;
+    }
+
+    modifier validProposal(address _proposal){
+        require(proposalStatus[_proposal].isValid);
+        _;
+    }
+
+    modifier dao(address _proposal, uint256 _supportRate){
+        uint256 vote = depositToken.balanceOf(_proposal);
+        uint256 supply = depositToken.totalSupply();
+        uint256 balance = depositToken.balanceOf(depositAgent);
+        uint256 circulation = safeSub(supply, balance);
+        bool isApproved = formula.isApproved(circulation, vote, _supportRate);
+        require(isApproved);
+        _;
+    }
+
+    function activate() ownerOnly{
+        transferOwnership(this);
+        acceptOwnership();
+        isActive = true;
+    }
+
+    function propose(address _proposal)
+    validAddress(_proposal) {
+        dao.transferDepositTokensFrom(_proposal, depositAgent, proposalPrice);
+        proposals.push(_proposal);
+        proposalStatus[_proposal].isValid = true;
+    }
+
+    function transferDABOwnership(IProposal _proposal)
+    validProposal(msg.sender)
+    dao(msg.sender, 80)
+    {
+    // TODO to transfer DAB ownership
+//        string proposedDAOFunction = _proposal.proposedDAOFunction();
+//        require(proposedDAOFunction == 'transferDABOwnership');
+//        address proposedContractAddress = _proposal.proposedContractAddress();
+//        DAB.transferOwnership(proposedContractAddress);
+    }
+
+    function setDABFormula()
+    validProposal(msg.sender)
+    dao(msg.sender, 80)
+    {
+    // TODO to set DAB formula
+//        string proposedDAOFunction = _proposal.proposedDAOFunction();
+//        require(proposedDAOFunction == 'setDABFormula');
+//        address proposedContractAddress = _proposal.proposedContractAddress();
+//        dab.setDABFormula(proposedContractAddress);
+
+    }
+
+
+    function addLoanPlanFormula()
+    validProposal(msg.sender)
+    dao(msg.sender, 80)
+    {
+    // TODO to add loan plan formula
+//        string proposedDAOFunction = _proposal.proposedDAOFunction();
+//        require(proposedDAOFunction == 'addLoanPlanFormula');
+//        address proposedContractAddress = _proposal.proposedContractAddress();
+//        dab.addLoanPlanFormula(proposedContractAddress);
+    }
+
+    function vote(IProposal _proposal, uint256 _voteAmount)
+    public
+    validAddress(_proposal)
+    validAmount(_voteAmount)
+    validProposal(_proposal){
+        dab.transferDepositTokensFrom(msg.sender, _proposal, _voteAmount);
+        _proposal.vote(msg.sender, _voteAmount);
+        votes[msg.sender][_proposal] = safeAdd(votes[msg.sender][_proposal], _voteAmount);
+    }
+
+    function acceptOwnership(IProposal _proposal)
+    validProposal(msg.sender)
+    dao(msg.sender, 50)
+    {
+        dab.acceptOwnership();
+    }
+
+
+}
