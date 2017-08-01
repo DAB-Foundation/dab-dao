@@ -49,10 +49,4 @@ contract DAB is Owned{
     // TODO disable loan plan formula
     }
 
-    function transferDepositTokensFrom(address _from, address _to, uint256 _amount)
-    public
-    ownerOnly{
-        depositAgent.transferDepositTokensFrom(_from, _to, _amount);
-    }
-
 }
