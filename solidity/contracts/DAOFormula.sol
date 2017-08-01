@@ -8,7 +8,7 @@ contract DAOFormula is Math{
     function isApproved(uint256 _circulation, uint256 _vote, uint256 _supportRate) public returns (bool){
         _circulation = EtherToFloat(_circulation);
         _vote = EtherToFloat(_vote);
-        _supportRate = Float(_supportRate);
+        _supportRate = div(Float(_supportRate), Float(100));
         uint256 realRate = div(_vote, _circulation);
         if(realRate >= _supportRate){
             return true;

@@ -64,8 +64,8 @@ contract DAO is Owned, DAOFormula{
         _;
     }
 
-    modifier dao(address _proposal, uint256 _supportRate){
-        uint256 vote = depositToken.balanceOf(_proposal);
+    modifier dao(uint256 _supportRate){
+        uint256 vote = depositToken.balanceOf(msg.sender);
         uint256 supply = depositToken.totalSupply();
         uint256 balance = depositToken.balanceOf(depositAgent);
         uint256 circulation = safeSub(supply, balance);
@@ -91,7 +91,7 @@ contract DAO is Owned, DAOFormula{
 
     function transferDABOwnership()
     validProposal
-    dao(msg.sender, 80)
+    dao(80)
     {
         IProposal proposal = IProposal(msg.sender);
         address proposalContract = proposal.proposalContract();
@@ -100,7 +100,7 @@ contract DAO is Owned, DAOFormula{
 
     function setDABFormula()
     validProposal
-    dao(msg.sender, 80)
+    dao(80)
     {
         IProposal proposal = IProposal(msg.sender);
         address proposalContract = proposal.proposalContract();
@@ -111,7 +111,7 @@ contract DAO is Owned, DAOFormula{
 
     function addLoanPlanFormula()
     validProposal
-    dao(msg.sender, 80)
+    dao(80)
     {
         IProposal proposal = IProposal(msg.sender);
         address proposalContract = proposal.proposalContract();
@@ -120,7 +120,7 @@ contract DAO is Owned, DAOFormula{
 
     function disableLoanPlanFormula()
     validProposal
-    dao(msg.sender, 80)
+    dao(80)
     {
         IProposal proposal = IProposal(msg.sender);
         address proposalContract = proposal.proposalContract();
@@ -139,7 +139,7 @@ contract DAO is Owned, DAOFormula{
 
     function acceptDABOwnership()
     validProposal
-    dao(msg.sender, 50)
+    dao(50)
     {
         dab.acceptOwnership();
     }
