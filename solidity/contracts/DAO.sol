@@ -56,8 +56,11 @@ contract DAO is Owned, DAOFormula{
         _;
     }
 
-    modifier validProposal(address _proposal){
-        require(proposalStatus[_proposal].isValid);
+    modifier validProposal(){
+        IProposal proposal = IProposal(msg.sender);
+        address _owner = proposal.owner();
+        require(_owner == address(this));
+        require(proposalStatus[proposal].isValid);
         _;
     }
 
@@ -87,7 +90,7 @@ contract DAO is Owned, DAOFormula{
     }
 
     function transferDABOwnership()
-    validProposal(msg.sender)
+    validProposal
     dao(msg.sender, 80)
     {
         IProposal proposal = IProposal(msg.sender);
@@ -96,7 +99,7 @@ contract DAO is Owned, DAOFormula{
     }
 
     function setDABFormula()
-    validProposal(msg.sender)
+    validProposal
     dao(msg.sender, 80)
     {
         IProposal proposal = IProposal(msg.sender);
@@ -107,7 +110,7 @@ contract DAO is Owned, DAOFormula{
 
 
     function addLoanPlanFormula()
-    validProposal(msg.sender)
+    validProposal
     dao(msg.sender, 80)
     {
         IProposal proposal = IProposal(msg.sender);
@@ -116,7 +119,7 @@ contract DAO is Owned, DAOFormula{
     }
 
     function disableLoanPlanFormula()
-    validProposal(msg.sender)
+    validProposal
     dao(msg.sender, 80)
     {
         IProposal proposal = IProposal(msg.sender);
@@ -128,14 +131,14 @@ contract DAO is Owned, DAOFormula{
     public
     validAddress(_proposal)
     validAmount(_voteAmount)
-    validProposal(_proposal){
+    validProposal {
         depositToken.transferFrom(msg.sender, _proposal, _voteAmount);
         _proposal.vote(msg.sender, _voteAmount);
         votes[msg.sender][_proposal] = safeAdd(votes[msg.sender][_proposal], _voteAmount);
     }
 
     function acceptDABOwnership()
-    validProposal(msg.sender)
+    validProposal
     dao(msg.sender, 50)
     {
         dab.acceptOwnership();
