@@ -1,0 +1,214 @@
+{
+  "contract_name": "DAB",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "activate",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "isActive",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "acceptOwnership",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_formula",
+          "type": "address"
+        }
+      ],
+      "name": "addLoanPlanFormula",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "depositToken",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_formula",
+          "type": "address"
+        }
+      ],
+      "name": "disableLoanPlanFormula",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "newOwner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_from",
+          "type": "address"
+        },
+        {
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferDepositTokensFrom",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "depositAgent",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_formula",
+          "type": "address"
+        }
+      ],
+      "name": "setDABFormula",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "_depositAgent",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "_prevOwner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "_newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnerUpdate",
+      "type": "event"
+    }
+  ],
+  "unlinked_binary": "0x6060604052341561000c57fe5b60405160208061060f83398101604052515b5b60008054600160a060020a03191633600160a060020a03161790555b60038054600160a060020a031916600160a060020a038381169190911791829055604080516000602091820181905282517fc89039c50000000000000000000000000000000000000000000000000000000081529251949093169363c89039c5936004808501948390030190829087803b15156100b457fe5b6102c65a03f115156100c257fe5b50506040515160028054600160a060020a031916600160a060020a03909216919091179055505b505b610515806100fa6000396000f3006060604052361561009e5763ffffffff60e060020a6000350416630f15f4c081146100a057806322f3e2d4146100b257806379ba5097146100d65780638da5cb5b146100e8578063b456059714610114578063c89039c514610132578063d31f0e4c14610114578063d4ee1d901461017c578063df72e03b146101a8578063e29f3be5146101cf578063f2fde38b146101fb578063f7188b4214610114575bfe5b34156100a857fe5b6100b0610237565b005b34156100ba57fe5b6100c26102c2565b604080519115158252519081900360200190f35b34156100de57fe5b6100b06102d2565b005b34156100f057fe5b6100f8610362565b60408051600160a060020a039092168252519081900360200190f35b341561011c57fe5b6100b0600160a060020a0360043516610371565b005b341561013a57fe5b6100f8610392565b60408051600160a060020a039092168252519081900360200190f35b341561011c57fe5b6100b0600160a060020a0360043516610371565b005b341561018457fe5b6100f86103c2565b60408051600160a060020a039092168252519081900360200190f35b34156101b057fe5b6100b0600160a060020a03600435811690602435166044356103d1565b005b34156101d757fe5b6100f8610461565b60408051600160a060020a039092168252519081900360200190f35b341561020357fe5b6100b0600160a060020a0360043516610470565b005b341561011c57fe5b6100b0600160a060020a0360043516610371565b005b60005433600160a060020a039081169116146102535760006000fd5b6003546040805160e660020a623c57d30281529051600160a060020a0390921691630f15f4c09160048082019260009290919082900301818387803b151561029757fe5b6102c65a03f115156102a557fe5b50506001805460a060020a60ff02191660a060020a179055505b5b565b60015460a060020a900460ff1681565b60015433600160a060020a039081169116146102ee5760006000fd5b60005460015460408051600160a060020a03938416815292909116602083015280517f343765429aea5a34b3ff6a3785a98a5abb2597aca87bfbb58632c173d585373a9281900390910190a16001805460008054600160a060020a0319908116600160a060020a038416179091551690555b565b600054600160a060020a031681565b60005433600160a060020a0390811691161461038d5760006000fd5b5b5b50565b600254600160a060020a031681565b60005433600160a060020a0390811691161461038d5760006000fd5b5b5b50565b600154600160a060020a031681565b60005433600160a060020a039081169116146103ed5760006000fd5b6003546040805160e060020a63df72e03b028152600160a060020a0386811660048301528581166024830152604482018590529151919092169163df72e03b91606480830192600092919082900301818387803b151561044957fe5b6102c65a03f1151561045757fe5b5050505b5b505050565b600354600160a060020a031681565b60005433600160a060020a0390811691161461048c5760006000fd5b600054600160a060020a03828116911614156104a85760006000fd5b60018054600160a060020a031916600160a060020a0383161790555b5b50565b60005433600160a060020a0390811691161461038d5760006000fd5b5b5b505600a165627a7a72305820a137672a43a4bff4b14b2e4463f508f9789ec4c05cf090f1df5968c69db5984c0029",
+  "networks": {
+    "10": {
+      "links": {},
+      "events": {
+        "0x343765429aea5a34b3ff6a3785a98a5abb2597aca87bfbb58632c173d585373a": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "_prevOwner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "_newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnerUpdate",
+          "type": "event"
+        }
+      },
+      "updated_at": 1501591315490
+    }
+  },
+  "schema_version": "0.0.5",
+  "updated_at": 1501591315490
+}
