@@ -14,17 +14,18 @@ contract DAO is Owned, DAOFormula{
     bool isValid;
     }
 
+
+    bool public isActive;
+    uint256 public proposalPrice = 1000 ether;
+    address[] public proposals;
+    mapping (address => Proposal) public proposalStatus;
+    mapping (address => mapping (address => uint256)) public votes;
+
     ISmartToken public depositToken;
     DABDepositAgent public depositAgent;
     DAB public dab;
     DAOFormula public formula;
 
-    bool public isActive;
-
-    uint256 public proposalPrice = 1000 ether;
-    address[] public proposals;
-    mapping (address => Proposal) public proposalStatus;
-    mapping (address => mapping (address => uint256)) public votes;
 
     function DAO(
     DAB _dab,
@@ -32,6 +33,7 @@ contract DAO is Owned, DAOFormula{
         dab = _dab;
         formula = _formula;
 
+        isActive = false;
         depositAgent = dab.depositAgent();
         depositToken = dab.depositToken();
     }
@@ -75,12 +77,16 @@ contract DAO is Owned, DAOFormula{
     }
 
     function activate() ownerOnly{
-        transferOwnership(this);
-        acceptOwnership();
         isActive = true;
     }
 
+    function freeze() ownerOnly{
+        isActive = false;
+    }
+
     function propose(IProposal _proposal)
+    public
+    active
     validAddress(_proposal) {
         require(msg.sender == address(_proposal));
         _proposal.acceptOwnership();
@@ -90,45 +96,49 @@ contract DAO is Owned, DAOFormula{
     }
 
     function transferDABOwnership()
+    public
+    active
     validProposal
-    dao(80)
-    {
+    dao(80) {
         IProposal proposal = IProposal(msg.sender);
-        address proposalContract = proposal.proposalContract();
+        address proposalContract = proposal.getProposalContract();
         dab.transferOwnership(proposalContract);
     }
 
     function setDABFormula()
+    public
+    active
     validProposal
-    dao(80)
-    {
+    dao(80) {
         IProposal proposal = IProposal(msg.sender);
-        address proposalContract = proposal.proposalContract();
+        address proposalContract = proposal.getProposalContract();
         dab.setDABFormula(proposalContract);
 
     }
 
-
     function addLoanPlanFormula()
+    public
+    active
     validProposal
-    dao(80)
-    {
+    dao(80) {
         IProposal proposal = IProposal(msg.sender);
-        address proposalContract = proposal.proposalContract();
+        address proposalContract = proposal.getProposalContract();
         dab.addLoanPlanFormula(proposalContract);
     }
 
     function disableLoanPlanFormula()
+    public
+    active
     validProposal
-    dao(80)
-    {
+    dao(80) {
         IProposal proposal = IProposal(msg.sender);
-        address proposalContract = proposal.proposalContract();
+        address proposalContract = proposal.getProposalContract();
         dab.disableLoanPlanFormula(proposalContract);
     }
 
     function vote(IProposal _proposal, uint256 _voteAmount)
     public
+    active
     validAddress(_proposal)
     validAmount(_voteAmount)
     validProposal {
@@ -138,6 +148,8 @@ contract DAO is Owned, DAOFormula{
     }
 
     function acceptDABOwnership()
+    public
+    active
     validProposal
     dao(50)
     {

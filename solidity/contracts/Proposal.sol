@@ -2,13 +2,14 @@ pragma solidity ^0.4.11;
 
 import './interfaces/IProposal.sol';
 import './interfaces/ISmartToken.sol';
+import './Owned.sol';
 import './SafeMath.sol';
 import './DAO.sol';
 import './SmartTokenController.sol';
 
-contract Proposal is IProposal, SafeMath{
+contract Proposal is IProposal, Owned, SafeMath{
 
-
+    address public proposalContract;
     uint256 public startTime;
     uint256 public endTime;
     uint256 public redeemTime;
@@ -23,15 +24,19 @@ contract Proposal is IProposal, SafeMath{
     function Proposal(
     DAO _dao,
     SmartTokenController _voteTokenController,
+    address _proposalContract,
     uint256 _startTime,
     uint256 _endTime,
-    uint256 _redeemTime){
+    uint256 _redeemTime)
+    validAddress(_dao)
+    validAddress(_voteTokenController){
         require(now < _startTime);
         require(_startTime < _endTime);
         require(_endTime < _redeemTime);
 
         dao = _dao;
         voteTokenController = _voteTokenController;
+        proposalContract = _proposalContract;
         startTime = _startTime;
         endTime = _endTime;
         redeemTime = _redeemTime;
@@ -39,6 +44,16 @@ contract Proposal is IProposal, SafeMath{
         depositToken = dao.depositToken();
         voteToken = _voteTokenController.token();
         proposalPrice = dao.proposalPrice();
+    }
+
+    modifier validAddress(address _address){
+        require(_address != 0x0);
+        _;
+    }
+
+    modifier validAmount(uint256 _amount){
+        require(_amount > 0);
+        _;
     }
 
     modifier voteStage(){
@@ -56,6 +71,14 @@ contract Proposal is IProposal, SafeMath{
         _;
     }
 
+    function acceptVoteTokenControllerOwnership() public ownerOnly{
+        voteTokenController.acceptOwnership();
+    }
+
+    function getProposalContract() public ownerOnly returns (address){
+        return proposalContract;
+    }
+
     function propose() public ownerOnly{
         depositToken.approve(dao, proposalPrice);
         transferOwnership(dao);
@@ -66,6 +89,8 @@ contract Proposal is IProposal, SafeMath{
     public
     ownerOnly
     voteStage
+    validAddress(_voter)
+    validAmount(_voteAmount)
     {
         voteTokenController.issueTokens(_voter, _voteAmount);
     }

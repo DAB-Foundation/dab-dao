@@ -2,8 +2,9 @@ pragma solidity ^0.4.11;
 
 import '../Owned.sol';
 
-contract IProposal is Owned{
-    address public proposalContract;
+contract IProposal is IOwned{
+
+    function getProposalContract() public returns (address) {}
     function propose() public {}
     function vote(address _voter, uint256 _voteAmount) public {}
     function execute() public {}

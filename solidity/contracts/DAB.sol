@@ -31,6 +31,27 @@ contract DAB is Owned{
         isActive = true;
     }
 
+/**
+    @dev allows transferring the token agent ownership
+    the new owner still need to accept the transfer
+    can only be called by the contract owner
+
+    @param _newOwner    new token owner
+*/
+    function transferDepositAgentOwnership(address _newOwner)
+    public
+    ownerOnly
+    inactive {
+        depositAgent.transferOwnership(_newOwner);
+    }
+
+    function acceptDepositAgentOwnership()
+    public
+    ownerOnly
+    inactive {
+        depositAgent.acceptOwnership();
+    }
+
     function setDABFormula(address _formula)
     public
     ownerOnly{
