@@ -1,9 +1,9 @@
 
 ## DAB DAO
-### What is it
+### What Is DAB DAO
 DAB DAO is Decentralized Autonomous Bank DAO. It is to redistribute and allocate the authorities and votes to the holders of all deposit tokens(DPT).
 
-### Why
+### Why DAB DAO
 #### Goal
 Democratic vote to execute the privilege functions.
 
@@ -11,9 +11,9 @@ Needs to achieve
 1. Need to be able to update the contracts: mainly formulas.
 2. Need more than 80% of the support rate to be able to modify DAB's ownership(Move to another DABDao).
 3. Need more than 80% of the support rate to be able to modify formulas.
-4. Need more than 50% support to be able to accept  DAB's ownership(to be autonomous).
+4. Need more than 50% support rate to be able to accept  DAB's ownership(to be autonomous).
 
-### How
+### How To Achieve DAB DAO
 #### Implementation
 A proposal contract that implements the Proposal Abstract Class, which can be run privilege functions on DABDao after gaining a support rate that exceeds the threshold, and then upgrades the original contract.
 
@@ -27,7 +27,7 @@ If a proposal contract want to execute the DABDao privilege function, then the p
 3. After the proposal contract proposed, voters can vote the proposal by `vote` function of the DABDao Contract, each DPT is a vote.
 4. If the amount of votes in this proposal reaches the threshold that can execute the target privilege function in DABDao before vote stage ended, then the function on the DABDao can be executed. Otherwise, it fails.  either the proposal fails or succeeds, it will enter the redeem stage.
 
-### Test
+### Test DAB DAO
 
 
 Tests are included and can be run on using [truffle](https://github.com/trufflesuite/truffle) and [testrpc](https://github.com/ethereumjs/testrpc).
