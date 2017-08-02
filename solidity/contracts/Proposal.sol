@@ -2,9 +2,9 @@ pragma solidity ^0.4.11;
 
 import './interfaces/IProposal.sol';
 import './interfaces/ISmartToken.sol';
+import './interfaces/IDABDao.sol';
 import './Owned.sol';
 import './SafeMath.sol';
-import './DAO.sol';
 import './SmartTokenController.sol';
 
 contract Proposal is IProposal, Owned, SafeMath{
@@ -16,34 +16,30 @@ contract Proposal is IProposal, Owned, SafeMath{
 
     uint256 public proposalPrice;
 
-    DAO public dao;
+    IDABDao public dao;
     ISmartToken public depositToken;
     ISmartToken public voteToken;
     SmartTokenController public voteTokenController;
 
     function Proposal(
-    DAO _dao,
+    IDABDao _dao,
     SmartTokenController _voteTokenController,
     address _proposalContract,
-    uint256 _startTime,
-    uint256 _endTime,
-    uint256 _redeemTime)
+    uint256 _duration)
     validAddress(_dao)
-    validAddress(_voteTokenController){
-        require(now < _startTime);
-        require(_startTime < _endTime);
-        require(_endTime < _redeemTime);
+    validAddress(_voteTokenController)
+    validAmount(_duration) {
 
         dao = _dao;
         voteTokenController = _voteTokenController;
         proposalContract = _proposalContract;
-        startTime = _startTime;
-        endTime = _endTime;
-        redeemTime = _redeemTime;
+        startTime = now + 1 days;
+        endTime = startTime + _duration;
+        redeemTime = endTime + 1 days;
 
         depositToken = dao.depositToken();
-        voteToken = _voteTokenController.token();
         proposalPrice = dao.proposalPrice();
+        voteToken = voteTokenController.token();
     }
 
     modifier validAddress(address _address){
@@ -56,13 +52,18 @@ contract Proposal is IProposal, Owned, SafeMath{
         _;
     }
 
+    modifier proposeStage(){
+        require(now < startTime);
+        _;
+    }
+
     modifier voteStage(){
         require(now > startTime && now < endTime);
         _;
     }
 
     modifier excuteStage(){
-        require(now > endTime && now < redeemTime);
+        require(now > startTime && now < redeemTime);
         _;
     }
 
@@ -75,14 +76,17 @@ contract Proposal is IProposal, Owned, SafeMath{
         voteTokenController.acceptOwnership();
     }
 
-    function getProposalContract() public ownerOnly returns (address){
+    function getProposalContract() public returns (address){
         return proposalContract;
     }
 
-    function propose() public ownerOnly{
+    function propose() public ownerOnly proposeStage{
+        uint256 voteTokenSupply = voteToken.totalSupply();
+        require(voteTokenSupply == 0);
         depositToken.approve(dao, proposalPrice);
         transferOwnership(dao);
         dao.propose(this);
+        startTime = now;
     }
 
     function vote(address _voter, uint256 _voteAmount)

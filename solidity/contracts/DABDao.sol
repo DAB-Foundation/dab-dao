@@ -1,22 +1,25 @@
 pragma solidity ^0.4.11;
 
+import './interfaces/IDABDao.sol';
 import './interfaces/IProposal.sol';
 import './interfaces/ISmartToken.sol';
-import './DAB.sol';
-import './DAOFormula.sol';
-import './DABDepositAgent.sol';
+import './interfaces/IDABFormula.sol';
+import './interfaces/ILoanPlanFormula.sol';
+import './interfaces/IDABDaoFormula.sol';
 import './Owned.sol';
-import './Math.sol';
+import './SafeMath.sol';
+import './DAB.sol';
+import './DABDepositAgent.sol';
 
-contract DAO is Owned, DAOFormula{
+contract DABDao is Owned, IDABDao, SafeMath{
 
     struct Proposal{
     bool isValid;
     }
 
-
     bool public isActive;
     uint256 public proposalPrice = 1000 ether;
+    uint256 public creditAgentActivationTime;
     address[] public proposals;
     mapping (address => Proposal) public proposalStatus;
     mapping (address => mapping (address => uint256)) public votes;
@@ -24,16 +27,16 @@ contract DAO is Owned, DAOFormula{
     ISmartToken public depositToken;
     DABDepositAgent public depositAgent;
     DAB public dab;
-    DAOFormula public formula;
+    IDABDaoFormula public formula;
 
-
-    function DAO(
+    function DABDao(
     DAB _dab,
-    DAOFormula _formula){
+    IDABDaoFormula _formula){
         dab = _dab;
         formula = _formula;
 
         isActive = false;
+        creditAgentActivationTime = dab.creditAgentActivationTime();
         depositAgent = dab.depositAgent();
         depositToken = dab.depositToken();
     }
@@ -66,21 +69,28 @@ contract DAO is Owned, DAOFormula{
         _;
     }
 
-    modifier dao(uint256 _supportRate){
+// ensures that credit contract activated
+    modifier activeCreditAgent() {
+        require(now > creditAgentActivationTime);
+        _;
+    }
+
+    modifier dao(uint256 _threshold){
+        require(_threshold <= 100 && _threshold >= 50);
         uint256 vote = depositToken.balanceOf(msg.sender);
         uint256 supply = depositToken.totalSupply();
         uint256 balance = depositToken.balanceOf(depositAgent);
         uint256 circulation = safeSub(supply, balance);
-        bool isApproved = formula.isApproved(circulation, vote, _supportRate);
+        bool isApproved = formula.isApproved(circulation, vote, _threshold);
         require(isApproved);
         _;
     }
 
-    function activate() ownerOnly{
+    function activate() ownerOnly activeCreditAgent{
         isActive = true;
     }
 
-    function freeze() ownerOnly{
+    function freeze() ownerOnly activeCreditAgent{
         isActive = false;
     }
 
@@ -101,7 +111,7 @@ contract DAO is Owned, DAOFormula{
     validProposal
     dao(80) {
         IProposal proposal = IProposal(msg.sender);
-        address proposalContract = proposal.getProposalContract();
+        address proposalContract = proposal.proposalContract();
         dab.transferOwnership(proposalContract);
     }
 
@@ -111,8 +121,9 @@ contract DAO is Owned, DAOFormula{
     validProposal
     dao(80) {
         IProposal proposal = IProposal(msg.sender);
-        address proposalContract = proposal.getProposalContract();
-        dab.setDABFormula(proposalContract);
+        address proposalContract = proposal.proposalContract();
+        IDABFormula formula = IDABFormula(proposalContract);
+        dab.setDABFormula(formula);
 
     }
 
@@ -122,8 +133,9 @@ contract DAO is Owned, DAOFormula{
     validProposal
     dao(80) {
         IProposal proposal = IProposal(msg.sender);
-        address proposalContract = proposal.getProposalContract();
-        dab.addLoanPlanFormula(proposalContract);
+        address proposalContract = proposal.proposalContract();
+        ILoanPlanFormula formula = ILoanPlanFormula(proposalContract);
+        dab.addLoanPlanFormula(formula);
     }
 
     function disableLoanPlanFormula()
@@ -132,8 +144,9 @@ contract DAO is Owned, DAOFormula{
     validProposal
     dao(80) {
         IProposal proposal = IProposal(msg.sender);
-        address proposalContract = proposal.getProposalContract();
-        dab.disableLoanPlanFormula(proposalContract);
+        address proposalContract = proposal.proposalContract();
+        ILoanPlanFormula formula = ILoanPlanFormula(proposalContract);
+        dab.disableLoanPlanFormula(formula);
     }
 
     function vote(IProposal _proposal, uint256 _voteAmount)

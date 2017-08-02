@@ -4,9 +4,9 @@ import '../Owned.sol';
 
 contract IProposal is IOwned{
 
-    function getProposalContract() public returns (address) {}
-    function propose() public {}
-    function vote(address _voter, uint256 _voteAmount) public {}
-    function execute() public {}
-    function redeem() public {}
+    function proposalContract() public constant returns (address proposalContract){proposalContract;}
+    function propose() public;
+    function vote(address, uint256) public;
+    function execute() public;
+    function redeem() public;
 }

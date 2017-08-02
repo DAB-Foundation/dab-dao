@@ -2,8 +2,8 @@ pragma solidity ^0.4.11;
 
 import './Math.sol';
 
-contract DAOFormula is Math{
-    function DAOFormula(){}
+contract DABDaoFormula is Math{
+    function DABDaoFormula(){}
 
     function isApproved(uint256 _circulation, uint256 _vote, uint256 _supportRate) public returns (bool){
         _circulation = EtherToFloat(_circulation);

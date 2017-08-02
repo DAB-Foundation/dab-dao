@@ -6,12 +6,16 @@ import './DABDepositAgent.sol';
 contract DAB is Owned{
 
     bool public isActive;
+    uint256 public creditAgentActivationTime;
 
     ISmartToken public depositToken;
     DABDepositAgent public depositAgent;
 
-    function DAB(DABDepositAgent _depositAgent){
+    function DAB(
+    DABDepositAgent _depositAgent,
+    uint256 _activationTime){
         depositAgent = _depositAgent;
+        creditAgentActivationTime = _activationTime;
 
         depositToken = depositAgent.depositToken();
     }
@@ -56,18 +60,21 @@ contract DAB is Owned{
     public
     ownerOnly{
     // TODO set DAB formula
+        _formula;
     }
 
     function addLoanPlanFormula(address _formula)
     public
     ownerOnly{
     // TODO add loan plan formula
+        _formula;
     }
 
     function disableLoanPlanFormula(address _formula)
     public
     ownerOnly{
     // TODO disable loan plan formula
+        _formula;
     }
 
 }
