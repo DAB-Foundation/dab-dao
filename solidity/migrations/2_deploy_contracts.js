@@ -61,7 +61,7 @@ module.exports = async(deployer, network) => {
     });
 
     await VoteTokenController.deployed(async(instance) =>{
-        await instance.transferOwnership(AcceptDABOwnershipProposal.address);
+        await instance.transferOwnership(ProposalToAcceptDABOwnership.address);
     });
 
     await DABDepositAgent.deployed(async(instance) =>{

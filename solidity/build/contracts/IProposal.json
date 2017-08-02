@@ -2,14 +2,27 @@
   "contract_name": "IProposal",
   "abi": [
     {
+      "constant": true,
+      "inputs": [],
+      "name": "proposalContract",
+      "outputs": [
+        {
+          "name": "proposalContract",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
       "constant": false,
       "inputs": [
         {
-          "name": "_voter",
+          "name": "",
           "type": "address"
         },
         {
-          "name": "_voteAmount",
+          "name": "",
           "type": "uint256"
         }
       ],
@@ -75,23 +88,10 @@
       "outputs": [],
       "payable": false,
       "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [],
-      "name": "getProposalContract",
-      "outputs": [
-        {
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "type": "function"
     }
   ],
   "unlinked_binary": "0x",
   "networks": {},
   "schema_version": "0.0.5",
-  "updated_at": 1501605286515
+  "updated_at": 1501665494593
 }
