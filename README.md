@@ -15,17 +15,17 @@ Needs to achieve
 
 ### How To Achieve DAB DAO
 #### Implementation
-A proposal contract that implements the Proposal Abstract Class, which can be run privilege functions on DABDao after gaining a support rate that exceeds the threshold, and then upgrades the original contract.
+A proposal contract that implements the Proposal Abstract Class, which can run a privilege function on DABDao after gaining a support rate that exceeds the threshold, and then upgrades the original contract.
 
-In the process of voting, the voting DPT will be converted into a temporary Vote Token(VOT), and this token is controlled by the Proposal Contract, the voters can redeem their DPT after the proposal ended, ether succeeds or fails.
+In the process of voting, the voting DPT will be converted into a temporary Vote Token(VOT), and this token is controlled by the Proposal Contract, the voters can redeem their DPT from proposal contract by destroy their VOT after the proposal ended, either succeeds or fails.
 
-If a proposal contract want to execute the DABDao privilege function, then the proposal needs to have a certain proportion of DPT. Such a mechanism can avoid the voters vote twice.
+If a proposal contract want to execute the DABDao privilege function, then the proposal needs to have a certain proportion of DPT. Such a mechanism can avoid the a DPT vote twice.
 
 #### Steps
 1. The first step is to implement an proposal contract for a specific goal, set the duration and the target DABDao function and the new proposed replacement contract.
-2. And then the propose the contract to the DABDao Contract, the process needs to transfer a certain amount of deposit token from the proposal contract to the DepositAgent to avoid misuse of `propose` function in the DABDao Contract.
+2. And then propose the contract to the DABDao Contract, the process needs to transfer a certain amount of DPT(proposal price) from the proposal contract to the DepositAgent to avoid misuse of `propose` function in the DABDao Contract.
 3. After the proposal contract proposed, voters can vote the proposal by `vote` function of the DABDao Contract, each DPT is a vote.
-4. If the amount of votes in this proposal reaches the threshold that can execute the target privilege function in DABDao before vote stage ended, then the function on the DABDao can be executed. Otherwise, it fails.  either the proposal fails or succeeds, it will enter the redeem stage.
+4. If the amount of votes in this proposal reaches the threshold that can execute the target privilege function in DABDao before vote stage ends, then the function on the DABDao can be executed. Otherwise, it fails.  either the proposal fails or succeeds, it will enter the redeem stage.
 
 ### Test DAB DAO
 
