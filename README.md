@@ -1,7 +1,7 @@
 
 ## DAB DAO
 ### What is it
-Distribute the authority to the holders of all deposit tokens(DPT).
+DAB DAO is Decentralized Autonomous Bank DAO. It is to redistribute and allocate the authorities and votes to the holders of all deposit tokens(DPT).
 
 ### Why
 #### Goal
