@@ -72,8 +72,6 @@ contract DAO is Owned, DAOFormula{
     }
 
     function activate() ownerOnly{
-        transferOwnership(this);
-        acceptOwnership();
         isActive = true;
     }
 
