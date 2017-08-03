@@ -1,9 +1,12 @@
 pragma solidity ^0.4.11;
 
+import './interfaces/IDAB.sol';
 import './interfaces/ISmartToken.sol';
+import './interfaces/IDABFormula.sol';
+import './interfaces/ILoanPlanFormula.sol';
 import './DABDepositAgent.sol';
 
-contract DAB is Owned{
+contract DAB is Owned, IDAB{
 
     bool public isActive;
     uint256 public creditAgentActivationTime;
@@ -56,21 +59,21 @@ contract DAB is Owned{
         depositAgent.acceptOwnership();
     }
 
-    function setDABFormula(address _formula)
+    function setDABFormula(IDABFormula _formula)
     public
     ownerOnly{
     // TODO set DAB formula
         _formula;
     }
 
-    function addLoanPlanFormula(address _formula)
+    function addLoanPlanFormula(ILoanPlanFormula _formula)
     public
     ownerOnly{
     // TODO add loan plan formula
         _formula;
     }
 
-    function disableLoanPlanFormula(address _formula)
+    function disableLoanPlanFormula(ILoanPlanFormula _formula)
     public
     ownerOnly{
     // TODO disable loan plan formula
