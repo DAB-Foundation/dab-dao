@@ -34,61 +34,61 @@ module.exports = async(deployer, network) => {
     await deployer.deploy(ProposalToAcceptDABOwnership, DAO.address, VoteTokenController.address, '0x0', duration);
 
 
-    await DepositToken.deployed(async(instance) =>{
+    await DepositToken.deployed.then(async(instance) =>{
        await instance.transferOwnership(DepositTokenController.address);
     });
 
-    await VoteToken.deployed(async(instance) =>{
+    await VoteToken.deployed.then(async(instance) =>{
         await instance.transferOwnership(VoteTokenController.address);
     });
 
-    await DepositTokenController.deployed(async(instance) =>{
+    await DepositTokenController.deployed.then(async(instance) =>{
         await instance.acceptTokenOwnership();
     });
 
     if(network === "testnet" || network === "testrpc"){
-        await DepositTokenController.deployed(async(instance) =>{
+        await DepositTokenController.deployed.then(async(instance) =>{
             await instance.issueTokens(account, Math.pow(10, 23));
         });
     }
 
-    await VoteTokenController.deployed(async(instance) =>{
+    await VoteTokenController.deployed.then(async(instance) =>{
         await instance.acceptTokenOwnership();
     });
 
-    await DepositTokenController.deployed(async(instance) =>{
+    await DepositTokenController.deployed.then(async(instance) =>{
         await instance.transferOwnership(DABDepositAgent.address);
     });
 
-    await VoteTokenController.deployed(async(instance) =>{
+    await VoteTokenController.deployed.then(async(instance) =>{
         await instance.transferOwnership(ProposalToAcceptDABOwnership.address);
     });
 
-    await DABDepositAgent.deployed(async(instance) =>{
+    await DABDepositAgent.deployed.then(async(instance) =>{
         await instance.acceptDepositTokenControllerOwnership();
     });
 
-    await ProposalToAcceptDABOwnership.deployed(async(instance) =>{
+    await ProposalToAcceptDABOwnership.deployed.then(async(instance) =>{
         await instance.acceptVoteTokenControllerOwnership();
     });
 
-    await DABDepositAgent.deployed(async(instance) =>{
+    await DABDepositAgent.deployed.then(async(instance) =>{
         await instance.transferOwnership(DAB.address);
     });
 
-    await DAB.deployed(async(instance) =>{
+    await DAB.deployed.then(async(instance) =>{
         await instance.acceptDepositAgentOwnership(DAB.address);
     });
 
-    await DAB.deployed(async(instance) =>{
+    await DAB.deployed.then(async(instance) =>{
         await instance.transferOwnership(DAO.address);
     });
 
-    await DAO.deployed(async(instance) =>{
+    await DAO.deployed.then(async(instance) =>{
         await instance.activate();
     });
 
-    await ProposalToAcceptDABOwnership.deployed(async(instance) =>{
+    await ProposalToAcceptDABOwnership.deployed.then(async(instance) =>{
         await instance.propose();
     });
 
