@@ -6,10 +6,6 @@ import './ISmartToken.sol';
 
 contract IDABDao is IOwned{
 
-    function activate();
-
-    function freeze();
-
     function depositToken() public constant returns (ISmartToken depositToken){depositToken;}
 
     function proposalPrice() public constant returns (uint256 proposalPrice) {proposalPrice;}

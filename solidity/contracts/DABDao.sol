@@ -1,5 +1,6 @@
 pragma solidity ^0.4.11;
 
+import './interfaces/IDAB.sol';
 import './interfaces/IDABDao.sol';
 import './interfaces/IProposal.sol';
 import './interfaces/ISmartToken.sol';
@@ -8,35 +9,33 @@ import './interfaces/ILoanPlanFormula.sol';
 import './interfaces/IDABDaoFormula.sol';
 import './Owned.sol';
 import './SafeMath.sol';
-import './DAB.sol';
-import './DABDepositAgent.sol';
 
-contract DABDao is Owned, IDABDao, SafeMath{
+contract DABDao is IDABDao, SafeMath{
 
     struct Proposal{
     bool isValid;
     }
 
-    bool public isActive;
-    uint256 public proposalPrice = 1000 ether;
-    uint256 public creditAgentActivationTime;
+    uint256 public proposalPrice;
     address[] public proposals;
+    address public depositAgent;
     mapping (address => Proposal) public proposalStatus;
-    mapping (address => mapping (address => uint256)) public votes;
 
     ISmartToken public depositToken;
-    DABDepositAgent public depositAgent;
-    DAB public dab;
+    IDAB public dab;
     IDABDaoFormula public formula;
 
+    event LogPropose(uint256 _time, address _proposal);
+
     function DABDao(
-    DAB _dab,
-    IDABDaoFormula _formula){
+    IDAB _dab,
+    IDABDaoFormula _formula)
+    validAddress(_dab)
+    validAddress(_formula) {
         dab = _dab;
         formula = _formula;
 
-        isActive = false;
-        creditAgentActivationTime = dab.creditAgentActivationTime();
+        proposalPrice = 1000 ether;
         depositAgent = dab.depositAgent();
         depositToken = dab.depositToken();
     }
@@ -51,27 +50,13 @@ contract DABDao is Owned, IDABDao, SafeMath{
         _;
     }
 
-    modifier active(){
-        require(isActive == true);
-        _;
-    }
-
-    modifier inactive(){
-        require(isActive == false);
-        _;
-    }
-
     modifier validProposal(){
-        IProposal proposal = IProposal(msg.sender);
-        address _owner = proposal.owner();
-        require(_owner == address(this));
-        require(proposalStatus[proposal].isValid);
+        require(proposalStatus[msg.sender].isValid == true);
         _;
     }
 
-// ensures that credit contract activated
-    modifier activeCreditAgent() {
-        require(now > creditAgentActivationTime);
+    modifier validVote(IProposal _proposal){
+        require(proposalStatus[_proposal].isValid == true);
         _;
     }
 
@@ -86,88 +71,75 @@ contract DABDao is Owned, IDABDao, SafeMath{
         _;
     }
 
-    function activate() ownerOnly activeCreditAgent{
-        isActive = true;
-    }
-
-    function freeze() ownerOnly activeCreditAgent{
-        isActive = false;
-    }
-
     function propose(IProposal _proposal)
     public
-    active
     validAddress(_proposal) {
         require(msg.sender == address(_proposal));
         _proposal.acceptOwnership();
         depositToken.transferFrom(_proposal, depositAgent, proposalPrice);
         proposals.push(_proposal);
         proposalStatus[_proposal].isValid = true;
+        LogPropose(now, _proposal);
     }
 
-    function transferDABOwnership()
+    function vote(IProposal _proposal, uint256 _voteAmount)
     public
-    active
-    validProposal
-    dao(80) {
-        IProposal proposal = IProposal(msg.sender);
-        address proposalContract = proposal.proposalContract();
-        dab.transferOwnership(proposalContract);
+    validAddress(_proposal)
+    validAmount(_voteAmount)
+    validVote(_proposal) {
+        assert(depositToken.transferFrom(msg.sender, _proposal, _voteAmount));
+        _proposal.vote(msg.sender, _voteAmount);
     }
 
     function setDABFormula()
     public
-    active
     validProposal
     dao(80) {
         IProposal proposal = IProposal(msg.sender);
         address proposalContract = proposal.proposalContract();
         IDABFormula formula = IDABFormula(proposalContract);
         dab.setDABFormula(formula);
-
+        proposalStatus[msg.sender].isValid = false;
     }
 
     function addLoanPlanFormula()
     public
-    active
     validProposal
     dao(80) {
         IProposal proposal = IProposal(msg.sender);
         address proposalContract = proposal.proposalContract();
         ILoanPlanFormula formula = ILoanPlanFormula(proposalContract);
         dab.addLoanPlanFormula(formula);
+        proposalStatus[msg.sender].isValid = false;
     }
 
     function disableLoanPlanFormula()
     public
-    active
     validProposal
     dao(80) {
         IProposal proposal = IProposal(msg.sender);
         address proposalContract = proposal.proposalContract();
         ILoanPlanFormula formula = ILoanPlanFormula(proposalContract);
         dab.disableLoanPlanFormula(formula);
+        proposalStatus[msg.sender].isValid = false;
     }
 
-    function vote(IProposal _proposal, uint256 _voteAmount)
+    function transferDABOwnership()
     public
-    active
-    validAddress(_proposal)
-    validAmount(_voteAmount)
-    validProposal {
-        depositToken.transferFrom(msg.sender, _proposal, _voteAmount);
-        _proposal.vote(msg.sender, _voteAmount);
-        votes[msg.sender][_proposal] = safeAdd(votes[msg.sender][_proposal], _voteAmount);
+    validProposal
+    dao(80) {
+        IProposal proposal = IProposal(msg.sender);
+        address proposalContract = proposal.proposalContract();
+        dab.transferOwnership(proposalContract);
+        proposalStatus[msg.sender].isValid = false;
     }
 
     function acceptDABOwnership()
     public
-    active
     validProposal
-    dao(50)
-    {
+    dao(50) {
         dab.acceptOwnership();
+        proposalStatus[msg.sender].isValid = false;
     }
-
 
 }
