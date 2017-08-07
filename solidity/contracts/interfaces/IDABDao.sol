@@ -4,7 +4,8 @@ import './IOwned.sol';
 import './IProposal.sol';
 import './ISmartToken.sol';
 
-contract IDABDao is IOwned{
+
+contract IDABDao{
 
     function depositToken() public constant returns (ISmartToken depositToken){depositToken;}
 

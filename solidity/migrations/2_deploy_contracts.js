@@ -46,11 +46,6 @@ module.exports = async(deployer, network) => {
         await instance.acceptTokenOwnership();
     });
 
-    if(network === "testnet" || network === "testrpc"){
-        await DepositTokenController.deployed.then(async(instance) =>{
-            await instance.issueTokens(account, Math.pow(10, 23));
-        });
-    }
 
     await VoteTokenController.deployed.then(async(instance) =>{
         await instance.acceptTokenOwnership();
@@ -84,12 +79,5 @@ module.exports = async(deployer, network) => {
         await instance.transferOwnership(DAO.address);
     });
 
-    await DAO.deployed.then(async(instance) =>{
-        await instance.activate();
-    });
-
-    await ProposalToAcceptDABOwnership.deployed.then(async(instance) =>{
-        await instance.propose();
-    });
 
 };

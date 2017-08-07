@@ -1,6 +1,6 @@
 pragma solidity ^0.4.11;
 
-import '../Owned.sol';
+import './IOwned.sol';
 
 contract IProposal is IOwned{
 
