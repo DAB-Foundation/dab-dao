@@ -29,6 +29,7 @@ If a proposal contract want to execute the DABDao privilege function, then the p
 
 ### Test DAB DAO
 
+[![Build Status](https://travis-ci.org/dabdevelop/dab-dao.svg?branch=master)](https://travis-ci.org/dabdevelop/dab-dao)
 
 Tests are included and can be run on using [truffle](https://github.com/trufflesuite/truffle) and [testrpc](https://github.com/ethereumjs/testrpc).
 
