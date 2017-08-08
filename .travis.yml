@@ -5,4 +5,5 @@ before_install:
   - brew install npm
   - npm install -g truffle@3.4.5
   - npm install -g ethereumjs-testrpc
+script: npm test
 
