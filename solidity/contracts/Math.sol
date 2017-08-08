@@ -39,7 +39,7 @@ contract Math is SafeMath {
 /**
     @dev new Float
 
-    @return number of tokens
+    @return Float
 */
     function Float(uint256 _int) internal constant returns (uint256) {
         assert(_int <= MAX_F);
@@ -53,7 +53,7 @@ contract Math is SafeMath {
 /**
     @dev new Decimal
 
-    @return number of tokens
+    @return Decimal
 */
     function Decimal(uint256 _int) internal constant returns (uint256) {
         assert(_int <= MAX_D);
@@ -68,7 +68,7 @@ contract Math is SafeMath {
 /**
     @dev cast the Float to Decimal
 
-    @return number of tokens
+    @return Decimal
 */
     function FloatToDecimal(uint256 _int) internal constant returns (uint256) {
         assert(_int <= MAX_DF);
@@ -78,7 +78,7 @@ contract Math is SafeMath {
 /**
     @dev cast the Decimal to Float
 
-    @return number of tokens
+    @return Float
 */
     function DecimalToFloat(uint256 _int) internal constant returns (uint256) {
         assert(_int <= MAX_DF);
@@ -88,7 +88,7 @@ contract Math is SafeMath {
 /**
     @dev cast the Ether to Decimal
 
-    @return number of tokens
+    @return Decimal
 */
     function EtherToDecimal(uint256 _int) internal constant returns (uint256) {
         assert(_int <= MAX_DE);
@@ -96,9 +96,9 @@ contract Math is SafeMath {
     }
 
 /**
-    @dev cast the Decial to Ether
+    @dev cast the Decimal to Ether
 
-    @return number of tokens
+    @return Ether
 */
     function DecimalToEther(uint256 _int) internal constant returns (uint256) {
         assert(_int <= MAX_DE);
@@ -108,7 +108,7 @@ contract Math is SafeMath {
 /**
     @dev cast the Float to Ether
 
-    @return number of tokens
+    @return Ether
 */
     function FloatToEther(uint256 _int) internal constant returns (uint256) {
         assert(_int <= MAX_FE);
@@ -118,7 +118,7 @@ contract Math is SafeMath {
 /**
     @dev cast the Ether to Float
 
-    @return number of tokens
+    @return Float
 */
     function EtherToFloat(uint256 _int) internal constant returns (uint256) {
         assert(_int <= MAX_FE);
@@ -183,6 +183,14 @@ contract Math is SafeMath {
         return z;
     }
 
+/**
+    @dev returns the division of divide _x by _y, asserts if the calculation overflows
+
+    @param _x   value 1
+    @param _y   value 2
+
+    @return division
+*/
     function div(uint256 _x, uint256 _y)
     internal constant
     returns (uint256) {
@@ -409,8 +417,16 @@ contract Math is SafeMath {
         return res / 0xde1bc4d19efcac82445da75b00000000;
     }
 
-/*
- TO complete doc
+/**
+    @dev the general sigmoid function
+
+    @param _a   ceil high
+    @param _b   floor
+    @param _l   center
+    @param _d   variance
+    @param _x   x
+
+    @return sigmoid
 */
     function sigmoid(uint256 _a, uint256 _b, uint256 _l, uint256 _d, uint256 _x)
     internal constant
@@ -459,6 +475,4 @@ contract Math is SafeMath {
         }
         return y;
     }
-
-
 }

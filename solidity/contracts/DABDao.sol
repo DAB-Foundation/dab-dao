@@ -35,7 +35,7 @@ contract DABDao is IDABDao, SafeMath{
         dab = _dab;
         formula = _formula;
 
-        proposalPrice = 1000 ether;
+        proposalPrice = 100 ether;
         depositAgent = dab.depositAgent();
         depositToken = dab.depositToken();
     }
@@ -51,7 +51,8 @@ contract DABDao is IDABDao, SafeMath{
     }
 
     modifier validProposal(){
-        require(proposalStatus[msg.sender].isValid == true);
+        IProposal proposal = IProposal(msg.sender);
+        require(proposalStatus[proposal].isValid == true);
         _;
     }
 
@@ -76,7 +77,7 @@ contract DABDao is IDABDao, SafeMath{
     validAddress(_proposal) {
         require(msg.sender == address(_proposal));
         _proposal.acceptOwnership();
-        depositToken.transferFrom(_proposal, depositAgent, proposalPrice);
+        assert(depositToken.transferFrom(_proposal, depositAgent, proposalPrice));
         proposals.push(_proposal);
         proposalStatus[_proposal].isValid = true;
         LogPropose(now, _proposal);
@@ -99,7 +100,7 @@ contract DABDao is IDABDao, SafeMath{
         address proposalContract = proposal.proposalContract();
         IDABFormula formula = IDABFormula(proposalContract);
         dab.setDABFormula(formula);
-        proposalStatus[msg.sender].isValid = false;
+        proposalStatus[proposal].isValid = false;
     }
 
     function addLoanPlanFormula()
@@ -110,7 +111,7 @@ contract DABDao is IDABDao, SafeMath{
         address proposalContract = proposal.proposalContract();
         ILoanPlanFormula formula = ILoanPlanFormula(proposalContract);
         dab.addLoanPlanFormula(formula);
-        proposalStatus[msg.sender].isValid = false;
+        proposalStatus[proposal].isValid = false;
     }
 
     function disableLoanPlanFormula()
@@ -121,7 +122,7 @@ contract DABDao is IDABDao, SafeMath{
         address proposalContract = proposal.proposalContract();
         ILoanPlanFormula formula = ILoanPlanFormula(proposalContract);
         dab.disableLoanPlanFormula(formula);
-        proposalStatus[msg.sender].isValid = false;
+        proposalStatus[proposal].isValid = false;
     }
 
     function transferDABOwnership()
@@ -131,15 +132,16 @@ contract DABDao is IDABDao, SafeMath{
         IProposal proposal = IProposal(msg.sender);
         address proposalContract = proposal.proposalContract();
         dab.transferOwnership(proposalContract);
-        proposalStatus[msg.sender].isValid = false;
+        proposalStatus[proposal].isValid = false;
     }
 
     function acceptDABOwnership()
     public
     validProposal
     dao(50) {
+        IProposal proposal = IProposal(msg.sender);
         dab.acceptOwnership();
-        proposalStatus[msg.sender].isValid = false;
+        proposalStatus[proposal].isValid = false;
     }
 
 }
