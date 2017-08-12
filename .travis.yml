@@ -7,6 +7,6 @@ before_install:
   - npm install -g truffle@3.4.5
   - npm install -g ethereumjs-testrpc
 before_script:
-  - npm start
+  - npm start &
 script: npm test
 
