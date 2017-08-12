@@ -3,6 +3,7 @@ os: osx
 before_install:
   - brew update
   - brew upgrade node
+  - nvm use system
   - npm install -g truffle@3.4.5
   - npm install -g ethereumjs-testrpc
 before_script:
