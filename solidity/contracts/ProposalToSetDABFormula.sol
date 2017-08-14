@@ -6,9 +6,9 @@ import './Proposal.sol';
 /*
     DAB DAO Proposal v0.1
 
-    Proposal to execute privilege functions acceptDABOwnership in DAO
+    Proposal to execute privilege functions setDABFormula in DAO
 */
-contract ProposalToAcceptDABOwnership is Proposal{
+contract ProposalToSetDABFormula is Proposal{
 
 /**
     @dev constructor
@@ -18,7 +18,7 @@ contract ProposalToAcceptDABOwnership is Proposal{
     @param _proposalContract      contract proposed in proposal
     @param _duration      duration of proposal
 */
-    function ProposalToAcceptDABOwnership(
+    function ProposalToSetDABFormula(
     IDABDao _dao,
     SmartTokenController _voteTokenController,
     address _proposalContract,
@@ -30,8 +30,8 @@ contract ProposalToAcceptDABOwnership is Proposal{
     @dev execute the proposal
 */
     function execute() public excuteStage {
-    // accept DAB ownership
-        dao.acceptDABOwnership();
+    // set DAB Formula
+        dao.setDABFormula();
     }
 
 }
