@@ -12,7 +12,7 @@ var DAO = artifacts.require("DABDao.sol");
 
 var ProposalToAcceptDABOwnership = artifacts.require("ProposalToAcceptDABOwnership.sol");
 
-let startTime = Math.floor(Date.now() / 1000) // crowdsale hasn't started
+let startTime = Math.floor(Date.now() / 1000); // crowdsale hasn't started
 let duration = 30 * 24 * 60 * 60; // crowdsale hasn't started
 
 let account = "0xee0714a27c93a64e504e54e25cca44dec11a856a";
