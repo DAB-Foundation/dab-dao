@@ -6,8 +6,6 @@ import './SafeMath.sol';
 
 contract Math is SafeMath {
 
-    uint256 constant MIN_PRECISION = 32;
-    uint256 constant MAX_PRECISION = 127;
     uint256 constant PRECISION = 64;  // fractional bits
     uint256 constant SUB_PRECISION = 48;  // fractional bits
     uint256 constant DECIMAL = 8;
